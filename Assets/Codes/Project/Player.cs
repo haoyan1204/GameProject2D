@@ -11,10 +11,13 @@ namespace PlatformShoot
         private float _mJumpForce = 12f;
         private bool _mJumpInput;
         private MainPanel _mainPanel;
+        private GameObject _mGamePass;
 
         private void Start()
         {
             _mRig = GetComponent<Rigidbody2D>();
+            _mGamePass = GameObject.Find("GamePass");
+            _mGamePass.SetActive(false);
             _mainPanel = GameObject.Find("MainPanel").GetComponent<MainPanel>();
         }
 
@@ -23,7 +26,8 @@ namespace PlatformShoot
             if (Input.GetKeyDown(KeyCode.J))
             {
                 var bullet = Resources.Load<GameObject>("Bullet");
-                GameObject.Instantiate(bullet, transform.position, quaternion.identity);
+                bullet = GameObject.Instantiate(bullet, transform.position, quaternion.identity);
+                bullet.GetComponent<Bullet>().GetGamePass(_mGamePass);
             }
 
             if (Input.GetKeyDown(KeyCode.Space))

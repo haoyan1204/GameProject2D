@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Door
   - Reword
+  - Trigger
   layers:
   - Default
   - TransparentFX
