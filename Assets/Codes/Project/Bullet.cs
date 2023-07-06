@@ -1,17 +1,17 @@
-using System;
 using UnityEngine;
 
 namespace PlatformShoot
 {
     public class Bullet : MonoBehaviour
     {
-        private float _vailidTime = 2f;
+        private float _vailidTime = 3f;
         private LayerMask _mLayerMask;
         private GameObject _mGamePass;
+        private int _bulletDir;
 
         private void Start()
         {
-            GameObject.Destroy(this.gameObject, _vailidTime);
+            Destroy(gameObject, _vailidTime);
             _mLayerMask = LayerMask.GetMask("Ground", "Trigger");
         }
 
@@ -20,9 +20,14 @@ namespace PlatformShoot
             _mGamePass = pass;
         }
 
+        public void InitDir(int dir)
+        {
+            _bulletDir = dir;
+        }
+
         private void Update()
         {
-            transform.Translate(12 * Time.deltaTime, 0, 0);
+            transform.Translate(_bulletDir * 12 * Time.deltaTime, 0, 0);
         }
 
         private void FixedUpdate()
@@ -32,10 +37,10 @@ namespace PlatformShoot
             {
                 if (coll.CompareTag("Trigger"))
                 {
-                    GameObject.Destroy(coll.gameObject);
+                    Destroy(coll.gameObject);
                     _mGamePass.SetActive(true);
                 }
-                GameObject.Destroy(this.gameObject);
+                Destroy(gameObject);
             }
         }
     }

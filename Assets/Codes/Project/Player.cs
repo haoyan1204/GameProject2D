@@ -12,6 +12,7 @@ namespace PlatformShoot
         private bool _mJumpInput;
         private MainPanel _mainPanel;
         private GameObject _mGamePass;
+        private int _mFaceDir = 1;
 
         private void Start()
         {
@@ -26,7 +27,8 @@ namespace PlatformShoot
             if (Input.GetKeyDown(KeyCode.J))
             {
                 var bullet = Resources.Load<GameObject>("Bullet");
-                bullet = GameObject.Instantiate(bullet, transform.position, quaternion.identity);
+                bullet = Instantiate(bullet, transform.position, quaternion.identity);
+                bullet.GetComponent<Bullet>().InitDir(_mFaceDir);
                 bullet.GetComponent<Bullet>().GetGamePass(_mGamePass);
             }
 
@@ -44,14 +46,21 @@ namespace PlatformShoot
                 _mRig.velocity = new Vector2(_mRig.velocity.x, _mJumpForce);
             }
 
-            _mRig.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * _mGroundMoveSpeed, _mRig.velocity.y);
+            var faceDir = Input.GetAxisRaw("Horizontal");
+            if (faceDir != 0 && faceDir != _mFaceDir)
+            {
+                _mFaceDir = -_mFaceDir;
+                transform.Rotate(0, 180, 0);
+            }
+
+            _mRig.velocity = new Vector2(faceDir * _mGroundMoveSpeed, _mRig.velocity.y);
         }
 
         private void OnTriggerEnter2D(Collider2D coll)
         {
             if (coll.gameObject.CompareTag("Reword"))
             {
-                GameObject.Destroy(coll.gameObject);
+                Destroy(coll.gameObject);
                 _mainPanel.UpdateScoreText(1);
             }
 
