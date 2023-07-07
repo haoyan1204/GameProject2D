@@ -8,14 +8,18 @@ namespace PlatformShoot
     {
         private Rigidbody2D _mRig;
         private float _mGroundMoveSpeed = 5f;
-        private float _mJumpForce = 12f;
+        private float _mJumpForce = 15f;
         private bool _mJumpInput;
         private int _mFaceDir = 1;
+        private LayerMask _mGroundLayerMask;
+        private BoxCollider2D _mBoxColl;
 
         private void Start()
         {
             _mRig = GetComponent<Rigidbody2D>();
-            this.GetSystem<ICameraSystem>().SetTarget(this.transform);
+            this.GetSystem<ICameraSystem>().SetTarget(transform);
+            _mGroundLayerMask = LayerMask.GetMask("Ground");
+            _mBoxColl = GetComponent<BoxCollider2D>();
         }
 
         private void Update()
@@ -29,8 +33,19 @@ namespace PlatformShoot
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _mJumpInput = true;
+                if (Physics2D.OverlapBox(transform.position + _mBoxColl.size.y * Vector3.down * 0.5f,
+                        Vector2.one * 0.1f, 0, _mGroundLayerMask))
+                {
+                    _mJumpInput = true;
+                }
             }
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(transform.position + _mBoxColl.size.y * Vector3.down * 0.5f,
+                new Vector2(_mBoxColl.size.x * 0.8f, 0.1f));
         }
 
         private void FixedUpdate()
