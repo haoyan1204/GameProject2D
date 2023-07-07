@@ -1,23 +1,18 @@
+using QFramework;
 using UnityEngine;
 
 namespace PlatformShoot
 {
-    public class Bullet : MonoBehaviour
+    public class Bullet : MonoBehaviour, IController
     {
-        private float _vailidTime = 3f;
+        private float _validTime = 3f;
         private LayerMask _mLayerMask;
-        private GameObject _mGamePass;
         private int _bulletDir;
 
         private void Start()
         {
-            Destroy(gameObject, _vailidTime);
+            Destroy(gameObject, _validTime);
             _mLayerMask = LayerMask.GetMask("Ground", "Trigger");
-        }
-
-        public void GetGamePass(GameObject pass)
-        {
-            _mGamePass = pass;
         }
 
         public void InitDir(int dir)
@@ -38,10 +33,15 @@ namespace PlatformShoot
                 if (coll.CompareTag("Trigger"))
                 {
                     Destroy(coll.gameObject);
-                    _mGamePass.SetActive(true);
+                    this.SendCommand<ShowPassDoorCommand>();
                 }
                 Destroy(gameObject);
             }
+        }
+
+        public IArchitecture GetArchitecture()
+        {
+            return PlatformShootGame.Interface;
         }
     }
 }
