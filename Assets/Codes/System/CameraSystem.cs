@@ -25,7 +25,7 @@ namespace PlatformShoot
         public void Update()
         {
            Camera.main.transform.localPosition =
-               new Vector3(mTarget.position.x, mTarget.position.y, -10);
+               new Vector3(mTarget.localPosition.x, mTarget.localPosition.y, -10);
         }
     }
 }
